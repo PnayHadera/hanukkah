@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<title>נוכחות קייטנת חנוכה</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E🕎%3C/text%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#14306b; --blue:#1f4fa8; --sky:#e8effb; --gold:#e0a526; --gold-soft:#fff5dc;
+    --ok:#1f8a4c; --ok-soft:#e3f5ea; --no:#c0392b; --no-soft:#fbe7e5; --gray:#6b7280; --line:#e5e7eb;
+    --bg:#f6f7fb; --card:#fff; --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:#111827;font-family:'Assistant',Arial,sans-serif;font-size:17px}
+  button,input,select,textarea{font-family:inherit;font-size:inherit}
+  .hidden{display:none!important}
+  .wrap{max-width:640px;margin:0 auto;padding:16px 14px 110px}
+  .wide{max-width:1100px}
+  header.top{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;padding:18px 16px 22px;border-radius:0 0 24px 24px}
+  header.top .inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:12px;justify-content:space-between}
+  header.top h1{margin:0;font-size:22px;font-weight:800}
+  header.top .sub{opacity:.85;font-size:15px;margin-top:2px}
+  .candles{font-size:26px;letter-spacing:2px}
+  .btn{border:0;border-radius:12px;padding:12px 18px;font-weight:700;cursor:pointer;background:var(--blue);color:#fff}
+  .btn:disabled{opacity:.5;cursor:default}
+  .btn.ghost{background:transparent;color:var(--blue);border:2px solid var(--blue)}
+  .btn.light{background:rgba(255,255,255,.18);color:#fff;padding:8px 12px;font-size:15px}
+  .btn.gold{background:var(--gold);color:#1a1a1a}
+  .btn.small{padding:7px 12px;font-size:15px;border-radius:10px}
+  .btn.danger{background:var(--no)}
+  .card{background:var(--card);border-radius:var(--radius);padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-top:14px}
+  .center{text-align:center}
+  .muted{color:var(--gray)}
+  label{font-weight:600;display:block;margin-bottom:6px}
+  input[type=text],input[type=password],input[type=date],textarea,select{width:100%;padding:12px;border:2px solid var(--line);border-radius:12px;background:#fff}
+  input:focus,textarea:focus{outline:none;border-color:var(--blue)}
+
+  /* login */
+  .login-box{max-width:380px;margin:40px auto 0;text-align:center}
+  .code-input{font-size:44px!important;letter-spacing:18px;text-align:center;font-weight:800;padding:14px 10px 14px 0!important;direction:ltr}
+  .login-box .btn{width:100%;font-size:20px;padding:15px;margin-top:14px}
+  .err{color:var(--no);font-weight:700;min-height:24px;margin-top:10px}
+  .link{background:none;border:0;color:var(--gray);text-decoration:underline;cursor:pointer;margin-top:26px;font-size:15px}
+
+  /* day chips */
+  .days{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 8px;margin-top:14px}
+  .day{flex:0 0 auto;border:2px solid var(--line);background:#fff;border-radius:14px;padding:8px 12px;text-align:center;cursor:pointer;min-width:70px}
+  .day b{display:block;font-size:17px}
+  .day span{font-size:13px;color:var(--gray)}
+  .day.active{border-color:var(--blue);background:var(--sky)}
+  .day.today::after{content:'היום';display:block;font-size:12px;color:var(--gold);font-weight:800}
+  .day .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);margin-inline-start:4px}
+
+  /* counters */
+  .counters{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+  .counter{background:#fff;border-radius:14px;padding:10px;text-align:center}
+  .counter b{display:block;font-size:26px}
+  .counter.ok b{color:var(--ok)} .counter.no b{color:var(--no)} .counter.none b{color:var(--gray)}
+
+  /* kid rows */
+  .kids{margin-top:12px}
+  .kid{display:flex;align-items:center;gap:8px;background:#fff;border-radius:14px;padding:10px 12px;margin-bottom:8px;border:2px solid transparent}
+  .kid.P{border-color:var(--ok);background:var(--ok-soft)}
+  .kid.A{border-color:var(--no);background:var(--no-soft)}
+  .kid .name{flex:1;font-size:19px;font-weight:700}
+  .kid .num{color:var(--gray);font-size:14px;width:22px}
+  .mark{border:2px solid var(--line);background:#fff;border-radius:12px;min-width:74px;padding:10px 6px;font-weight:800;cursor:pointer;font-size:16px}
+  .mark.yes.on{background:var(--ok);border-color:var(--ok);color:#fff}
+  .mark.no.on{background:var(--no);border-color:var(--no);color:#fff}
+  .rm{background:none;border:0;color:var(--no);font-size:20px;cursor:pointer;padding:4px}
+  .savebar{position:fixed;bottom:0;left:0;right:0;background:#fff;box-shadow:0 -2px 12px rgba(0,0,0,.08);padding:12px 14px calc(12px + env(safe-area-inset-bottom))}
+  .savebar .inner{max-width:640px;margin:0 auto;display:flex;gap:10px;align-items:center}
+  .savebar .btn{flex:1;font-size:20px;padding:15px}
+  .saved-note{font-size:14px;color:var(--ok);font-weight:700;text-align:center;margin-top:6px}
+  .unsaved{color:var(--gold)!important}
+
+  /* admin */
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+  .tab{border:0;background:#fff;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer;color:var(--navy)}
+  .tab.active{background:var(--navy);color:#fff}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+  .stat{background:#fff;border-radius:14px;padding:14px}
+  .stat b{display:block;font-size:28px;color:var(--navy)}
+  .stat.warn b{color:var(--no)}
+  table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden}
+  th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:right;font-size:16px;vertical-align:middle}
+  th{background:var(--sky);color:var(--navy);font-weight:800;position:sticky;top:0}
+  tr.click{cursor:pointer} tr.click:hover td{background:#fafbff}
+  .pill{display:inline-block;border-radius:999px;padding:2px 10px;font-size:14px;font-weight:700}
+  .pill.ok{background:var(--ok-soft);color:var(--ok)} .pill.no{background:var(--no-soft);color:var(--no)}
+  .table-wrap{overflow:auto;max-height:70vh;border-radius:12px;margin-top:12px}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .row > *{flex:1}
+  .code-cell input{width:80px;text-align:center;font-weight:800;letter-spacing:3px;padding:8px;direction:ltr}
+  td input[type=text]{padding:8px;border-radius:10px}
+  .import-group{border:2px solid var(--line);border-radius:14px;padding:12px;margin-top:10px;background:#fff}
+  .import-group textarea{min-height:120px;font-size:15px;line-height:1.5}
+  .import-group .row{margin-bottom:8px}
+  .toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#111827;color:#fff;padding:12px 20px;border-radius:12px;font-weight:700;z-index:99;box-shadow:0 4px 18px rgba(0,0,0,.2);max-width:90vw}
+  .toast.ok{background:var(--ok)} .toast.bad{background:var(--no)}
+  .loading{position:fixed;inset:0;background:rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;z-index:98;font-weight:800;color:var(--navy);font-size:20px}
+  .spinner{width:36px;height:36px;border:4px solid var(--sky);border-top-color:var(--blue);border-radius:50%;animation:spin 1s linear infinite;margin-inline-end:12px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .raw{white-space:pre-wrap;font-family:monospace;font-size:13px;max-height:300px;overflow:auto;background:#f3f4f6;padding:10px;border-radius:10px;direction:rtl}
+  .search{margin-top:10px}
+  .dlg-back{position:fixed;inset:0;background:rgba(17,24,39,.45);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
+  .dlg{background:#fff;border-radius:18px;padding:20px;max-width:380px;width:100%;font-size:18px;font-weight:600;text-align:center}
+</style>
+</head>
+<body>
+
+<div id="loading" class="loading hidden"><div class="spinner"></div><span id="loadingText">רגע...</span></div>
+<div id="toast" class="toast hidden"></div>
+<div id="dlg" class="dlg-back hidden"><div class="dlg"><div id="dlgMsg"></div><div class="row" style="margin-top:16px"><button class="btn ghost" id="dlgNo">ביטול</button><button class="btn" id="dlgYes">כן, להמשיך</button></div></div></div>
+
+<!-- ===== כניסת מובילה ===== -->
+<section id="scrLogin">
+  <header class="top"><div class="inner"><div><h1 id="loginTitle">נוכחות קייטנת חנוכה</h1><div class="sub">צהרוני פנאי העיר חדרה</div></div><div class="candles">🕎</div></div></header>
+  <div class="wrap">
+    <div class="login-box card">
+      <label for="codeInput" style="font-size:20px">הקלידי את הקוד האישי שלך</label>
+      <input id="codeInput" class="code-input" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" autocomplete="off" placeholder="•••">
+      <button class="btn" id="btnLogin">כניסה</button>
+      <div class="err" id="loginErr"></div>
+    </div>
+    <div class="center"><button class="link" id="lnkAdmin">כניסת הנהלה</button></div>
+  </div>
+</section>
+
+<!-- ===== מסך מילוי נוכחות (מובילה / הנהלה) ===== -->
+<section id="scrLeader" class="hidden">
+  <header class="top"><div class="inner">
+    <div><h1 id="grpName"></h1><div class="sub" id="grpLeader"></div></div>
+    <button class="btn light" id="btnLeaderExit">יציאה</button>
+  </div></header>
+  <div class="wrap">
+    <div class="days" id="dayChips"></div>
+    <div class="counters">
+      <div class="counter ok"><b id="cntP">0</b>הגיעו</div>
+      <div class="counter no"><b id="cntA">0</b>לא הגיעו</div>
+      <div class="counter none"><b id="cntN">0</b>לא סומנו</div>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <button class="btn ghost small" id="btnAllYes">✓ סמני את כולם "הגיע"</button>
+    </div>
+    <div id="adminKidTools" class="card hidden">
+      <label>הוספת ילד לקבוצה</label>
+      <div class="row"><input type="text" id="newKidName" placeholder="שם הילד/ה"><button class="btn small" id="btnAddKid" style="flex:0 0 auto">הוספה</button></div>
+    </div>
+    <div class="kids" id="kidList"></div>
+    <div class="center muted hidden" id="noKids" style="margin-top:30px">אין ילדים רשומים בקבוצה. פני להנהלה.</div>
+  </div>
+  <div class="savebar"><div class="inner"><button class="btn gold" id="btnSave">שמירת נוכחות</button></div>
+    <div class="saved-note" id="savedNote"></div></div>
+</section>
+
+<!-- ===== כניסת הנהלה ===== -->
+<section id="scrAdminLogin" class="hidden">
+  <header class="top"><div class="inner"><div><h1>כניסת הנהלה</h1><div class="sub">מעקב, דוחות וייבוא נתונים</div></div><div class="candles">🕎</div></div></header>
+  <div class="wrap">
+    <div class="login-box card">
+      <label for="pwInput">סיסמת הנהלה</label>
+      <input id="pwInput" type="password" autocomplete="current-password">
+      <button class="btn" id="btnAdminLogin">כניסה</button>
+      <div class="err" id="adminErr"></div>
+      <div class="muted" style="font-size:14px;margin-top:8px">בכניסה הראשונה – הסיסמה שתקלידו תהיה סיסמת ההנהלה.</div>
+    </div>
+    <div class="center"><button class="link" id="lnkBackLeader">חזרה לכניסת מובילה</button></div>
+  </div>
+</section>
+
+<!-- ===== דשבורד הנהלה ===== -->
+<section id="scrAdmin" class="hidden">
+  <header class="top"><div class="inner">
+    <div><h1 id="admCampName">דשבורד הנהלה</h1><div class="sub">צהרוני פנאי העיר חדרה – קייטנת חנוכה</div></div>
+    <button class="btn light" id="btnAdminExit">יציאה</button>
+  </div></header>
+  <div class="wrap wide">
+    <div class="tabs" id="admTabs">
+      <button class="tab active" data-tab="track">מעקב יומי</button>
+      <button class="tab" data-tab="groups">קבוצות וקודים</button>
+      <button class="tab" data-tab="import">ייבוא PDF</button>
+      <button class="tab" data-tab="report">דוח אקסל</button>
+      <button class="tab" data-tab="settings">הגדרות</button>
+    </div>
+
+    <!-- מעקב -->
+    <div id="tab-track">
+      <div class="days" id="admDayChips"></div>
+      <div class="stats">
+        <div class="stat"><b id="stReported">0/0</b>קבוצות שדיווחו</div>
+        <div class="stat warn"><b id="stMissing">0</b>לא דיווחו עדיין</div>
+        <div class="stat"><b id="stPresent">0</b>ילדים נוכחים</div>
+        <div class="stat"><b id="stPct">0%</b>אחוז נוכחות</div>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <input type="text" id="trackSearch" placeholder="חיפוש קבוצה / מובילה">
+        <label style="flex:0 0 auto;display:flex;align-items:center;gap:6px;margin:0"><input type="checkbox" id="onlyMissing"> רק שלא דיווחו</label>
+        <button class="btn ghost small" id="btnCopyMissing" style="flex:0 0 auto">העתקת רשימת "לא דיווחו"</button>
+        <button class="btn small" id="btnRefresh" style="flex:0 0 auto">רענון</button>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>קבוצה</th><th>מובילה</th><th>סטטוס</th><th>הגיעו</th><th>לא הגיעו</th><th>רשומים</th><th>שעת שמירה</th></tr></thead>
+        <tbody id="trackBody"></tbody>
+      </table></div>
+      <div class="muted" style="font-size:14px;margin-top:8px">לחיצה על שורה פותחת את הקבוצה לצפייה ותיקון.</div>
+    </div>
+
+    <!-- קבוצות -->
+    <div id="tab-groups" class="hidden">
+      <div class="card">
+        <div class="row">
+          <div class="muted">כל מובילה נכנסת עם קוד 3 ספרות של הקבוצה שלה. אפשר לשנות כאן קוד, שם קבוצה או שם מובילה.</div>
+          <button class="btn ghost small" id="btnCopyCodes" style="flex:0 0 auto">העתקת רשימת קודים</button>
+        </div>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>קבוצה</th><th>מובילה</th><th>קוד</th><th>ילדים</th><th></th></tr></thead>
+        <tbody id="groupsBody"></tbody>
+      </table></div>
+    </div>
+
+    <!-- ייבוא -->
+    <div id="tab-import" class="hidden">
+      <div class="card">
+        <label>העלאת קובצי PDF של "דו"ח משתתפים בקבוצות"</label>
+        <input type="file" id="pdfFiles" accept="application/pdf" multiple>
+        <div class="muted" style="font-size:14px;margin-top:8px">הקובץ נקרא כאן בדפדפן. נשמרים רק שם הקבוצה, שם המובילה ושמות הילדים – בלי טלפונים, ת"ז או אלרגיות. לפני השמירה אפשר לבדוק ולתקן.</div>
+      </div>
+      <div id="importPreview" class="hidden">
+        <div class="card">
+          <div class="row">
+            <div><b id="impSummary"></b></div>
+            <label style="flex:0 0 auto;display:flex;align-items:center;gap:6px;margin:0"><input type="checkbox" id="impReverse"> הטקסט הפוך? (הפיכת אותיות)</label>
+            <button class="btn ghost small" id="btnShowRaw" style="flex:0 0 auto">הצגת הטקסט הגולמי</button>
+          </div>
+          <div id="rawText" class="raw hidden" style="margin-top:10px"></div>
+        </div>
+        <div id="impGroups"></div>
+        <div class="card">
+          <label>אופן השמירה</label>
+          <label style="font-weight:400"><input type="radio" name="impMode" value="append" checked> הוספה למה שקיים (קבוצה עם אותו שם – מתמזגת)</label>
+          <label style="font-weight:400"><input type="radio" name="impMode" value="replace"> החלפה מלאה (מוחק את כל הקבוצות, הילדים והנוכחות הקיימים)</label>
+          <div class="row" style="margin-top:10px">
+            <button class="btn ghost" id="btnAddImpGroup">+ קבוצה ידנית</button>
+            <button class="btn gold" id="btnDoImport">שמירה למערכת</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- דוח -->
+    <div id="tab-report" class="hidden">
+      <div class="card">
+        <h3 style="margin-top:0">דוח נוכחות לאקסל</h3>
+        <p class="muted">הקובץ כולל: לשונית סיכום לפי קבוצה ויום, לשונית נוכחות מלאה (כל ילד × כל יום), לשונית "לא דיווחו", ולשונית לכל קבוצה.</p>
+        <button class="btn gold" id="btnExport">הפקת דוח אקסל</button>
+      </div>
+    </div>
+
+    <!-- הגדרות -->
+    <div id="tab-settings" class="hidden">
+      <div class="card">
+        <label>שם הקייטנה</label>
+        <input type="text" id="setCampName">
+        <label style="margin-top:14px">ימי הקייטנה</label>
+        <div id="setDays"></div>
+        <button class="btn ghost small" id="btnAddDay" style="margin-top:8px">+ יום</button>
+        <label style="margin-top:14px">שינוי סיסמת הנהלה (לא חובה)</label>
+        <input type="password" id="setNewPw" placeholder="השאירו ריק כדי לא לשנות" autocomplete="new-password">
+        <button class="btn" id="btnSaveSettings" style="margin-top:14px">שמירת הגדרות</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+<script>
+/* ================= עזרים ================= */
+var $ = function (id) { return document.getElementById(id); };
+var HEB_DAYS = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function store(k, v){ try { if (v === undefined) return localStorage.getItem(k); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch(e){ return null; } }
+function todayStr(){ var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+function dayLabel(ds){ var p = ds.split('-'); var d = new Date(+p[0], +p[1]-1, +p[2]); return { wd: 'יום ' + HEB_DAYS[d.getDay()], dm: (+p[2]) + '.' + (+p[1]) }; }
+function pickDefaultDay(days){ var t = todayStr(); if (days.indexOf(t) > -1) return t; var up = days.filter(function(d){ return d > t; }); return up.length ? up[0] : days[days.length-1]; }
+
+var API_URL = 'https://script.google.com/macros/s/AKfycbwx3nV_EQI2F7Kuj6g93iJ5BTZAxE8LxC8s9NjA1Dh7tuSYtYRMxG_w2E1qi9b-SvUEIg/exec';
+function cleanErr(m){ return String(m || '').replace(/^Exception:\s*/, '').replace(/^Error:\s*/, ''); }
+function api(fn){
+  var args = Array.prototype.slice.call(arguments, 1);
+  if (window.google && google.script && google.script.run) {
+    return new Promise(function (resolve, reject) {
+      google.script.run.withSuccessHandler(resolve).withFailureHandler(function (e) {
+        reject(new Error(cleanErr(e && e.message ? e.message : String(e))));
+      })[fn].apply(null, args);
+    });
+  }
+  function once(){
+    return fetch(API_URL, { method: 'POST', redirect: 'follow', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ fn: fn, args: args }) })
+      .then(function(r){ return r.json(); });
+  }
+  return once().catch(function(){ return new Promise(function(r){ setTimeout(r, 1200); }).then(once); })
+    .catch(function(){ throw new Error('אין חיבור לשרת. בדקי שיש אינטרנט ונסי שוב'); })
+    .then(function(d){ if (!d || !d.ok) throw new Error(cleanErr(d && d.error)); return d.result; });
+}
+function ask(cond, msg, fn){
+  if (!cond) return fn();
+  $('dlgMsg').textContent = msg; $('dlg').classList.remove('hidden');
+  $('dlgYes').onclick = function(){ $('dlg').classList.add('hidden'); fn(); };
+  $('dlgNo').onclick = function(){ $('dlg').classList.add('hidden'); };
+}
+var loadingCount = 0;
+function busy(on, text){ loadingCount += on ? 1 : -1; if (loadingCount < 0) loadingCount = 0; $('loadingText').textContent = text || 'רגע...'; $('loading').classList.toggle('hidden', loadingCount === 0); }
+var toastTimer;
+function toast(msg, kind){ var t = $('toast'); t.textContent = msg; t.className = 'toast ' + (kind || ''); clearTimeout(toastTimer); toastTimer = setTimeout(function(){ t.classList.add('hidden'); }, 3200); }
+function show(id){ ['scrLogin','scrLeader','scrAdminLogin','scrAdmin'].forEach(function(s){ $(s).classList.toggle('hidden', s !== id); }); window.scrollTo(0,0); }
+function copyText(text){
+  if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(function(){ toast('הועתק ✓','ok'); }, fallback); } else fallback();
+  function fallback(){ var ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); toast('הועתק ✓','ok'); } catch(e){ toast('ההעתקה לא הצליחה','bad'); } ta.remove(); }
+}
+
+/* ================= מצב ================= */
+var S = {
+  mode: 'leader',          // 'leader' | 'admin'
+  code: null, pw: null,
+  data: null,              // payload of a group
+  day: null,
+  marks: {},               // childId -> 'P'|'A' for current day (editable)
+  dirty: false,
+  admin: null,             // admin state
+  admDay: null
+};
+
+/* ================= כניסת מובילה ================= */
+$('codeInput').addEventListener('input', function(){ this.value = this.value.replace(/\D/g,'').slice(0,3); $('loginErr').textContent=''; if (this.value.length === 3) doLeaderLogin(); });
+$('codeInput').addEventListener('keydown', function(e){ if (e.key === 'Enter') doLeaderLogin(); });
+$('btnLogin').onclick = doLeaderLogin;
+$('lnkAdmin').onclick = function(){ show('scrAdminLogin'); $('pwInput').focus(); };
+$('lnkBackLeader').onclick = function(){ show('scrLogin'); };
+
+function doLeaderLogin(){
+  var code = $('codeInput').value.trim();
+  if (!/^\d{3}$/.test(code)) { $('loginErr').textContent = 'יש להקליד 3 ספרות'; return; }
+  busy(true, 'נכנסת...');
+  api('leaderLogin', code).then(function(p){
+    busy(false); S.mode = 'leader'; S.code = code; store('hk_code', code);
+    openGroup(p);
+  }).catch(function(e){ busy(false); $('loginErr').textContent = e.message; $('codeInput').value=''; store('hk_code', null); });
+}
+
+/* ================= מסך נוכחות ================= */
+function openGroup(p){
+  S.data = p;
+  $('grpName').textContent = p.group.name;
+  $('grpLeader').textContent = (p.group.leader ? 'מובילה: ' + p.group.leader : '') + (S.mode === 'admin' && p.group.code ? '  ·  קוד ' + p.group.code : '');
+  $('btnLeaderExit').textContent = S.mode === 'admin' ? 'חזרה לדשבורד' : 'יציאה';
+  $('adminKidTools').classList.toggle('hidden', S.mode !== 'admin');
+  var day = S.mode === 'admin' && S.admDay && p.days.indexOf(S.admDay) > -1 ? S.admDay : pickDefaultDay(p.days);
+  selectDay(day);
+  show('scrLeader');
+}
+
+function selectDay(day){
+  ask(S.dirty && day !== S.day, 'יש שינויים שלא נשמרו. לעבור יום בלי לשמור?', function(){
+    S.day = day;
+    S.marks = Object.assign({}, (S.data.attendance || {})[day] || {});
+    S.dirty = false;
+    renderDays(); renderKids();
+  });
+}
+
+function renderDays(){
+  var t = todayStr();
+  $('dayChips').innerHTML = S.data.days.map(function(d){
+    var l = dayLabel(d), done = S.data.attendance && S.data.attendance[d] && Object.keys(S.data.attendance[d]).length;
+    return '<button class="day' + (d === S.day ? ' active' : '') + (d === t ? ' today' : '') + '" data-day="' + d + '"><b>' + l.wd + (done ? '<i class="dot" title="דווח"></i>' : '') + '</b><span>' + l.dm + '</span></button>';
+  }).join('');
+  Array.prototype.forEach.call($('dayChips').querySelectorAll('.day'), function(b){ b.onclick = function(){ selectDay(b.getAttribute('data-day')); }; });
+}
+
+function renderKids(){
+  var kids = S.data.children;
+  $('noKids').classList.toggle('hidden', kids.length > 0);
+  $('kidList').innerHTML = kids.map(function(k, i){
+    var st = S.marks[k.id] || '';
+    return '<div class="kid ' + st + '" data-id="' + esc(k.id) + '">' +
+      '<span class="num">' + (i+1) + '</span><span class="name">' + esc(k.name) + '</span>' +
+      '<button class="mark yes' + (st === 'P' ? ' on' : '') + '" data-v="P">✓ הגיע</button>' +
+      '<button class="mark no' + (st === 'A' ? ' on' : '') + '" data-v="A">✗ לא</button>' +
+      (S.mode === 'admin' ? '<button class="rm" title="הסרת ילד" data-rm="1">🗑</button>' : '') +
+      '</div>';
+  }).join('');
+  Array.prototype.forEach.call($('kidList').querySelectorAll('.kid'), function(row){
+    var id = row.getAttribute('data-id');
+    Array.prototype.forEach.call(row.querySelectorAll('.mark'), function(b){
+      b.onclick = function(){ var v = b.getAttribute('data-v'); S.marks[id] = S.marks[id] === v ? undefined : v; if (!S.marks[id]) delete S.marks[id]; S.dirty = true; updateRow(row, S.marks[id]); updateCounters(); };
+    });
+    var rm = row.querySelector('[data-rm]');
+    if (rm) rm.onclick = function(){ removeKid(id); };
+  });
+  updateCounters();
+}
+function updateRow(row, st){
+  row.className = 'kid ' + (st || '');
+  row.querySelector('.mark.yes').classList.toggle('on', st === 'P');
+  row.querySelector('.mark.no').classList.toggle('on', st === 'A');
+}
+function updateCounters(){
+  var p = 0, a = 0, n = 0;
+  S.data.children.forEach(function(k){ var s = S.marks[k.id]; if (s === 'P') p++; else if (s === 'A') a++; else n++; });
+  $('cntP').textContent = p; $('cntA').textContent = a; $('cntN').textContent = n;
+  var saved = S.data.savedAt && S.data.savedAt[S.day];
+  var note = $('savedNote');
+  if (S.dirty) { note.textContent = 'יש שינויים שעוד לא נשמרו'; note.classList.add('unsaved'); }
+  else { note.classList.remove('unsaved'); note.textContent = saved ? '✓ נשמר ' + saved.slice(11) + ' (' + dayLabel(S.day).dm + ')' : 'עדיין לא נשמרה נוכחות ליום הזה'; }
+}
+
+$('btnAllYes').onclick = function(){ S.data.children.forEach(function(k){ S.marks[k.id] = 'P'; }); S.dirty = true; renderKids(); };
+
+$('btnSave').onclick = function(){
+  var n = S.data.children.filter(function(k){ return !S.marks[k.id]; }).length;
+  if (S.data.children.length && n === S.data.children.length) { toast('לא סומן אף ילד', 'bad'); return; }
+  ask(n > 0, n + ' ילדים לא סומנו. לשמור בכל זאת?', doSave);
+};
+function doSave(){
+  busy(true, 'שומרת...');
+  var call = S.mode === 'admin' ? api('adminSaveAttendance', S.pw, S.data.group.id, S.day, S.marks) : api('saveAttendance', S.code, S.day, S.marks);
+  call.then(function(r){
+    busy(false);
+    S.data.attendance = S.data.attendance || {}; S.data.savedAt = S.data.savedAt || {};
+    S.data.attendance[S.day] = Object.assign({}, S.marks); S.data.savedAt[S.day] = r.savedAt;
+    S.dirty = false; renderDays(); updateCounters();
+    toast('הנוכחות נשמרה ✓', 'ok');
+  }).catch(function(e){ busy(false); toast(e.message, 'bad'); });
+}
+
+$('btnLeaderExit').onclick = function(){
+  ask(S.dirty, 'יש שינויים שלא נשמרו. לצאת בכל זאת?', function(){
+    S.dirty = false;
+    if (S.mode === 'admin') { show('scrAdmin'); loadAdmin(); return; }
+    S.code = null; store('hk_code', null); $('codeInput').value = ''; show('scrLogin');
+  });
+};
+window.addEventListener('beforeunload', function(e){ if (S.dirty) { e.preventDefault(); e.returnValue = ''; } });
+
+/* ---- הנהלה: הוספה/הסרה של ילד ---- */
+$('btnAddKid').onclick = function(){
+  var name = $('newKidName').value.trim(); if (!name) return;
+  busy(true);
+  api('adminAddChild', S.pw, S.data.group.id, name).then(function(c){
+    busy(false); $('newKidName').value = '';
+    S.data.children.push({ id: c.id, name: c.name });
+    S.data.children.sort(function(a,b){ return a.name.localeCompare(b.name,'he'); });
+    renderKids(); toast('נוסף ✓','ok');
+  }).catch(function(e){ busy(false); toast(e.message,'bad'); });
+};
+function removeKid(id){
+  var k = S.data.children.filter(function(c){ return c.id === id; })[0];
+  if (!k) return;
+  ask(true, 'להסיר את ' + k.name + ' מהקבוצה? גם הנוכחות שלו/ה תימחק.', function(){
+    busy(true);
+    api('adminRemoveChild', S.pw, id).then(function(){
+      busy(false);
+      S.data.children = S.data.children.filter(function(c){ return c.id !== id; });
+      delete S.marks[id];
+      renderKids();
+    }).catch(function(e){ busy(false); toast(e.message,'bad'); });
+  });
+}
+
+/* ================= הנהלה ================= */
+$('pwInput').addEventListener('keydown', function(e){ if (e.key === 'Enter') doAdminLogin(); });
+$('btnAdminLogin').onclick = doAdminLogin;
+function doAdminLogin(){
+  var pw = $('pwInput').value;
+  if (!pw) return;
+  busy(true, 'נכנס...');
+  api('adminLogin', pw).then(function(r){
+    busy(false); S.pw = pw; S.mode = 'admin'; $('adminErr').textContent = ''; $('pwInput').value = '';
+    try { sessionStorage.setItem('hk_pw', pw); } catch(e){}
+    if (r.firstTime) toast('סיסמת ההנהלה נקבעה ✓', 'ok');
+    show('scrAdmin'); loadAdmin();
+  }).catch(function(e){ busy(false); $('adminErr').textContent = e.message; });
+}
+$('btnAdminExit').onclick = function(){ S.pw = null; S.mode = 'leader'; try { sessionStorage.removeItem('hk_pw'); } catch(e){} show('scrLogin'); };
+
+Array.prototype.forEach.call(document.querySelectorAll('#admTabs .tab'), function(t){
+  t.onclick = function(){
+    Array.prototype.forEach.call(document.querySelectorAll('#admTabs .tab'), function(x){ x.classList.toggle('active', x === t); });
+    ['track','groups','import','report','settings'].forEach(function(n){ $('tab-' + n).classList.toggle('hidden', n !== t.getAttribute('data-tab')); });
+  };
+});
+
+function loadAdmin(){
+  busy(true, 'טוען נתונים...');
+  return api('adminGetState', S.pw).then(function(st){
+    busy(false); S.admin = st;
+    $('admCampName').textContent = st.campName;
+    $('loginTitle').textContent = st.campName;
+    if (!S.admDay || st.days.indexOf(S.admDay) === -1) S.admDay = pickDefaultDay(st.days);
+    renderTrack(); renderGroups(); renderSettings();
+  }).catch(function(e){ busy(false); toast(e.message,'bad'); if (/סיסמ/.test(e.message)) { show('scrAdminLogin'); } });
+}
+$('btnRefresh').onclick = loadAdmin;
+$('trackSearch').oninput = renderTrack;
+$('onlyMissing').onchange = renderTrack;
+
+function renderTrack(){
+  var st = S.admin; if (!st) return;
+  var t = todayStr();
+  $('admDayChips').innerHTML = st.days.map(function(d){
+    var l = dayLabel(d);
+    return '<button class="day' + (d === S.admDay ? ' active' : '') + (d === t ? ' today' : '') + '" data-day="' + d + '"><b>' + l.wd + '</b><span>' + l.dm + '</span></button>';
+  }).join('');
+  Array.prototype.forEach.call($('admDayChips').querySelectorAll('.day'), function(b){ b.onclick = function(){ S.admDay = b.getAttribute('data-day'); renderTrack(); }; });
+
+  var day = S.admDay, reported = 0, present = 0, marked = 0;
+  st.groups.forEach(function(g){ var d = g.days[day]; if (d && (d.p + d.a) > 0) { reported++; present += d.p; marked += d.p + d.a; } });
+  $('stReported').textContent = reported + '/' + st.groups.length;
+  $('stMissing').textContent = st.groups.length - reported;
+  $('stPresent').textContent = present;
+  $('stPct').textContent = marked ? Math.round(present / marked * 100) + '%' : '—';
+
+  var q = $('trackSearch').value.trim(), only = $('onlyMissing').checked;
+  var rows = st.groups.slice().sort(function(a,b){
+    var ra = a.days[day] ? 1 : 0, rb = b.days[day] ? 1 : 0;
+    return ra - rb || a.name.localeCompare(b.name,'he');
+  }).filter(function(g){
+    if (only && g.days[day]) return false;
+    return !q || (g.name + ' ' + g.leader).indexOf(q) > -1;
+  });
+  $('trackBody').innerHTML = rows.length ? rows.map(function(g){
+    var d = g.days[day];
+    return '<tr class="click" data-id="' + esc(g.id) + '"><td><b>' + esc(g.name) + '</b></td><td>' + esc(g.leader) + '</td>' +
+      '<td>' + (d ? '<span class="pill ok">דווח</span>' : '<span class="pill no">לא דווח</span>') + '</td>' +
+      '<td>' + (d ? d.p : '') + '</td><td>' + (d ? d.a : '') + '</td><td>' + g.total + '</td><td>' + (d ? esc(d.savedAt.slice(11)) : '') + '</td></tr>';
+  }).join('') : '<tr><td colspan="7" class="center muted">' + (st.groups.length ? 'אין תוצאות' : 'עדיין אין קבוצות. התחילו בלשונית "ייבוא PDF".') + '</td></tr>';
+  Array.prototype.forEach.call($('trackBody').querySelectorAll('tr.click'), function(tr){ tr.onclick = function(){ openAdminGroup(tr.getAttribute('data-id')); }; });
+}
+
+$('btnCopyMissing').onclick = function(){
+  var st = S.admin; if (!st) return;
+  var miss = st.groups.filter(function(g){ return !g.days[S.admDay]; });
+  if (!miss.length) { toast('כל הקבוצות דיווחו 🎉','ok'); return; }
+  var l = dayLabel(S.admDay);
+  copyText('לא דיווחו נוכחות – ' + l.wd + ' ' + l.dm + ':\n' + miss.map(function(g){ return '• ' + g.name + (g.leader ? ' – ' + g.leader : ''); }).join('\n'));
+};
+
+function openAdminGroup(id){
+  busy(true);
+  api('adminGetGroup', S.pw, id).then(function(p){ busy(false); S.mode = 'admin'; openGroup(p); }).catch(function(e){ busy(false); toast(e.message,'bad'); });
+}
+
+/* ---- קבוצות וקודים ---- */
+function renderGroups(){
+  var st = S.admin;
+  $('groupsBody').innerHTML = st.groups.length ? st.groups.slice().sort(function(a,b){ return a.name.localeCompare(b.name,'he'); }).map(function(g){
+    return '<tr data-id="' + esc(g.id) + '"><td><input type="text" data-f="name" value="' + esc(g.name) + '"></td>' +
+      '<td><input type="text" data-f="leader" value="' + esc(g.leader) + '"></td>' +
+      '<td class="code-cell"><input type="text" inputmode="numeric" maxlength="3" data-f="code" value="' + esc(g.code) + '"></td>' +
+      '<td>' + g.total + '</td>' +
+      '<td style="white-space:nowrap"><button class="btn small" data-act="save">שמירה</button> <button class="btn small ghost" data-act="open">ילדים</button> <button class="btn small danger" data-act="del">מחיקה</button></td></tr>';
+  }).join('') : '<tr><td colspan="5" class="center muted">אין קבוצות עדיין</td></tr>';
+  Array.prototype.forEach.call($('groupsBody').querySelectorAll('tr[data-id]'), function(tr){
+    var id = tr.getAttribute('data-id');
+    tr.querySelector('[data-act=save]').onclick = function(){
+      var f = {}; Array.prototype.forEach.call(tr.querySelectorAll('input[data-f]'), function(i){ f[i.getAttribute('data-f')] = i.value; });
+      busy(true); api('adminUpdateGroup', S.pw, id, f).then(function(){ busy(false); toast('נשמר ✓','ok'); loadAdmin(); }).catch(function(e){ busy(false); toast(e.message,'bad'); });
+    };
+    tr.querySelector('[data-act=open]').onclick = function(){ openAdminGroup(id); };
+    tr.querySelector('[data-act=del]').onclick = function(){
+      var g = S.admin.groups.filter(function(x){ return x.id === id; })[0];
+      ask(true, 'למחוק את הקבוצה "' + g.name + '" כולל הילדים והנוכחות שלה?', function(){
+        busy(true); api('adminDeleteGroup', S.pw, id).then(function(){ busy(false); toast('נמחק','ok'); loadAdmin(); }).catch(function(e){ busy(false); toast(e.message,'bad'); });
+      });
+    };
+  });
+}
+$('btnCopyCodes').onclick = function(){
+  var st = S.admin; if (!st || !st.groups.length) return;
+  copyText(st.groups.slice().sort(function(a,b){ return a.name.localeCompare(b.name,'he'); }).map(function(g){ return g.name + ' – ' + (g.leader || '') + ' – קוד ' + g.code; }).join('\n'));
+};
+
+/* ---- הגדרות ---- */
+function renderSettings(){
+  var st = S.admin;
+  $('setCampName').value = st.campName;
+  $('setDays').innerHTML = '';
+  st.days.forEach(addDayInput);
+}
+function addDayInput(v){
+  var row = document.createElement('div'); row.className = 'row'; row.style.marginTop = '6px';
+  row.innerHTML = '<input type="date" value="' + esc(v || '') + '"><button class="btn small danger" style="flex:0 0 auto">הסרה</button>';
+  row.querySelector('button').onclick = function(){ row.remove(); };
+  $('setDays').appendChild(row);
+}
+$('btnAddDay').onclick = function(){ addDayInput(''); };
+$('btnSaveSettings').onclick = function(){
+  var days = Array.prototype.map.call($('setDays').querySelectorAll('input[type=date]'), function(i){ return i.value; }).filter(Boolean);
+  var np = $('setNewPw').value;
+  busy(true);
+  api('adminSaveSettings', S.pw, { campName: $('setCampName').value, days: days, newPassword: np || null }).then(function(){
+    busy(false); if (np) { S.pw = np; try { sessionStorage.setItem('hk_pw', np); } catch(e){} } $('setNewPw').value = '';
+    toast('ההגדרות נשמרו ✓','ok'); loadAdmin();
+  }).catch(function(e){ busy(false); toast(e.message,'bad'); });
+};
+
+/* ================= ייבוא PDF ================= */
+var IMP = { pages: [], groups: [] };
+if (window.pdfjsLib) { pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; }
+
+$('pdfFiles').onchange = function(){
+  var files = Array.prototype.slice.call(this.files || []);
+  if (!files.length) return;
+  if (!window.pdfjsLib) { toast('רכיב קריאת ה-PDF לא נטען. רעננו את הדף.','bad'); return; }
+  busy(true, 'קורא את הקבצים...');
+  Promise.all(files.map(readPdfLines)).then(function(results){
+    busy(false);
+    IMP.files = results;
+    var all = results.map(function(r){ return r.lines.map(function(l){ return l.cells; }); });
+    $('impReverse').checked = looksReversed(all);
+    parseImport();
+  }).catch(function(e){ busy(false); toast('שגיאה בקריאת הקובץ: ' + e.message,'bad'); });
+  this.value = '';
+};
+$('impReverse').onchange = parseImport;
+$('btnShowRaw').onclick = function(){ $('rawText').classList.toggle('hidden'); };
+
+/* קורא PDF ומחזיר שורות: כל שורה = רשימת תאים {t, x} מסודרים מימין לשמאל */
+function readPdfLines(file){
+  return file.arrayBuffer().then(function(buf){ return pdfjsLib.getDocument({ data: buf }).promise; }).then(function(pdf){
+    var jobs = [];
+    for (var i = 1; i <= pdf.numPages; i++) jobs.push(pdf.getPage(i).then(function(pg){ return pg.getTextContent(); }));
+    return Promise.all(jobs).then(function(contents){
+      var lines = [];
+      contents.forEach(function(tc, pi){
+        var items = tc.items.filter(function(it){ return it.str && it.str.trim(); }).map(function(it){
+          return { t: it.str, x: it.transform[4], y: it.transform[5], w: it.width || 0, h: Math.abs(it.transform[3]) || 10 };
+        });
+        items.sort(function(a,b){ return b.y - a.y || b.x - a.x; });
+        var cur = null;
+        items.forEach(function(it){
+          if (!cur || Math.abs(cur.y - it.y) > Math.max(2.5, it.h * 0.4)) { cur = { y: it.y, page: pi, items: [] }; lines.push(cur); }
+          cur.items.push(it);
+        });
+      });
+      lines.forEach(function(l){
+        l.items.sort(function(a,b){ return (b.x + b.w) - (a.x + a.w); });
+        // מאחדים פריטים צמודים לתא אחד; רווח גדול = עמודה חדשה
+        var cells = [], c = null;
+        l.items.forEach(function(it){
+          var right = it.x + it.w;
+          if (c && (c.left - right) < Math.max(4, it.h * 0.6)) { c.parts.push(it.t); c.left = it.x; }
+          else { c = { parts: [it.t], right: right, left: it.x }; cells.push(c); }
+        });
+        l.cells = cells.map(function(c){ return { t: c.parts.join(' ').replace(/\s+/g,' ').trim(), x: (c.left + c.right) / 2, left: c.left, right: c.right }; });
+      });
+      return { name: file.name.replace(/\.pdf$/i,''), lines: lines };
+    });
+  });
+}
+
+/* זיהוי טקסט עברי הפוך: אותיות סופיות בתחילת מילה */
+function looksReversed(allLines){
+  var start = 0, end = 0;
+  allLines.forEach(function(lines){ lines.forEach(function(cells){ cells.forEach(function(c){
+    c.t.split(/\s+/).forEach(function(w){ if (/^[ךםןףץ]/.test(w)) start++; if (/[ךםןףץ]$/.test(w)) end++; });
+  }); }); });
+  return start > end;
+}
+function fixText(s, rev){
+  if (!rev) return s;
+  // הופכים את סדר התווים בכל מילה עברית ואת סדר המילים
+  return s.split(' ').reverse().map(function(w){ return /[֐-׿]/.test(w) ? w.split('').reverse().join('') : w; }).join(' ');
+}
+
+var RX = {
+  leader: /(שם\s*ה?מדריך|מדריכ[הה]?|מוביל[הת]?|מדריכה)\s*[:\-]?\s*(.*)$/,
+  group: /(שם\s*ה?קבוצה|קבוצה|קבוצת|שם\s*ה?גן|גן)\s*[:\-]\s*(.+)$/,
+  nameHeader: /^(שם\s*פרטי|שם\s*משפחה|שם\s*ה?ילד[הה]?|שם\s*ה?משתתפ?[תה]?|שם\s*מלא|שם\s*ה?תלמיד[הה]?|שם\s*ה?חניכ?[הה]?|שם)$/,
+  skip: /(סה"?כ|סך הכל|עמוד\s*\d|דו"?ח|הופק|תאריך\s*הפקה|^\d+\s*\/\s*\d+$|משתתפים בקבוצות)/
+};
+
+function parseImport(){
+  var rev = $('impReverse').checked;
+  var groups = [], raw = [];
+  (IMP.files || []).forEach(function(f){
+    var cur = null, cols = null, pendingLeader = '';
+    function newGroup(name){
+      var g = groups.filter(function(x){ return x.name === name; })[0];
+      if (!g) { g = { name: name, leader: pendingLeader || '', children: [] }; groups.push(g); }
+      pendingLeader = '';
+      return g;
+    }
+    f.lines.forEach(function(l){
+      var cells = l.cells.map(function(c){ return { t: fixText(c.t, rev), x: c.x, left: c.left, right: c.right }; });
+      var text = cells.map(function(c){ return c.t; }).join(' | ');
+      raw.push(text);
+      // שורת כותרת של הטבלה?
+      var nameCols = [];
+      cells.forEach(function(c, i){
+        var t = c.t.replace(/[:\s]+$/,'').trim();
+        if (RX.nameHeader.test(t)) nameCols.push({ idx: i, label: t, x: c.x, left: c.left, right: c.right });
+      });
+      if (nameCols.length && cells.length >= 2) {
+        cols = { all: cells.map(function(c){ return { x: c.x, left: c.left, right: c.right, label: c.t }; }), names: nameCols };
+        return;
+      }
+      // קבוצה / מדריך – יכולים להופיע באותה שורה בתאים שונים
+      var handled = false;
+      cells.forEach(function(c, i){
+        var t = c.t, m;
+        var next = cells[i+1] ? cells[i+1].t : '';
+        if ((m = t.match(RX.leader)) && !/^\d/.test(t)) {
+          var v = m[2] || next; v = v.replace(/^[:\-\s]+/,'').trim();
+          if (v && !RX.group.test(v)) { if (cur && !cur.leader) cur.leader = v; else pendingLeader = v; }
+          handled = true;
+        } else if ((m = t.match(RX.group)) || /^(שם\s*ה?קבוצה|קבוצה)\s*:?$/.test(t)) {
+          var gv = (m && m[2]) ? m[2] : next; gv = (gv || '').replace(/^[:\-\s]+/,'').trim();
+          if (gv) { cur = newGroup(gv); handled = true; }
+        }
+      });
+      if (handled) { cols = cols; return; }
+      if (RX.skip.test(text)) return;
+      // שורת ילד
+      var name = '';
+      if (cols) {
+        // משייכים כל תא לעמודה הקרובה לפי מיקום אופקי
+        var byCol = {};
+        cells.forEach(function(c){
+          var best = -1, bd = 1e9;
+          cols.all.forEach(function(h, hi){ var d = Math.abs(h.x - c.x); if (c.x <= h.right + 2 && c.x >= h.left - 2) d = 0; if (d < bd) { bd = d; best = hi; } });
+          byCol[best] = (byCol[best] ? byCol[best] + ' ' : '') + c.t;
+        });
+        var first = '', last = '', full = '';
+        cols.names.forEach(function(nc){
+          var v = (byCol[nc.idx] || '').trim();
+          if (/פרטי/.test(nc.label)) first = v; else if (/משפחה/.test(nc.label)) last = v; else full = full || v;
+        });
+        name = full || [first, last].filter(Boolean).join(' ');
+      } else {
+        // אין כותרת: לוקחים את התא הראשון שנראה כמו שם (עברית, בלי ספרות)
+        var c1 = cells.filter(function(c){ return /[֐-׿]/.test(c.t) && !/\d/.test(c.t); })[0];
+        name = c1 ? c1.t : '';
+      }
+      name = name.replace(/[\d\-\/\.,()]+/g,' ').replace(/\s+/g,' ').trim();
+      if (!name || name.length < 2 || !/[֐-׿a-zA-Z]/.test(name)) return;
+      if (!cur) cur = newGroup(f.name);
+      if (cur.children.indexOf(name) === -1) cur.children.push(name);
+    });
+  });
+  IMP.groups = groups.filter(function(g){ return g.children.length || g.leader; });
+  $('rawText').textContent = raw.join('\n');
+  renderImport();
+}
+
+function renderImport(){
+  $('importPreview').classList.remove('hidden');
+  var kids = IMP.groups.reduce(function(s,g){ return s + g.children.length; }, 0);
+  $('impSummary').textContent = 'נמצאו ' + IMP.groups.length + ' קבוצות ו-' + kids + ' ילדים. בדקו ותקנו לפני שמירה:';
+  $('impGroups').innerHTML = IMP.groups.map(function(g, i){
+    return '<div class="import-group" data-i="' + i + '"><div class="row">' +
+      '<div><label>שם קבוצה</label><input type="text" data-f="name" value="' + esc(g.name) + '"></div>' +
+      '<div><label>מובילה</label><input type="text" data-f="leader" value="' + esc(g.leader) + '"></div>' +
+      '<button class="btn small danger" data-act="rm" style="flex:0 0 auto;align-self:flex-end">הסרה</button></div>' +
+      '<label>ילדים – שם אחד בכל שורה (<span data-cnt>' + g.children.length + '</span>)</label>' +
+      '<textarea data-f="children">' + esc(g.children.join('\n')) + '</textarea></div>';
+  }).join('');
+  Array.prototype.forEach.call($('impGroups').querySelectorAll('.import-group'), function(box){
+    var i = +box.getAttribute('data-i');
+    box.querySelector('[data-f=name]').oninput = function(){ IMP.groups[i].name = this.value; };
+    box.querySelector('[data-f=leader]').oninput = function(){ IMP.groups[i].leader = this.value; };
+    box.querySelector('[data-f=children]').oninput = function(){
+      IMP.groups[i].children = this.value.split('\n').map(function(s){ return s.trim(); }).filter(Boolean);
+      box.querySelector('[data-cnt]').textContent = IMP.groups[i].children.length;
+    };
+    box.querySelector('[data-act=rm]').onclick = function(){ IMP.groups.splice(i,1); renderImport(); };
+  });
+}
+$('btnAddImpGroup').onclick = function(){ IMP.groups.push({ name: '', leader: '', children: [] }); renderImport(); };
+$('btnDoImport').onclick = function(){
+  var groups = IMP.groups.filter(function(g){ return g.name.trim(); });
+  if (!groups.length) { toast('אין קבוצות לשמירה','bad'); return; }
+  var mode = document.querySelector('input[name=impMode]:checked').value;
+  ask(mode === 'replace', 'החלפה מלאה תמחק את כל הנתונים הקיימים כולל נוכחות. להמשיך?', function(){ doImport(groups, mode); });
+};
+function doImport(groups, mode){
+  busy(true, 'שומר...');
+  api('adminImport', S.pw, groups, mode).then(function(r){
+    busy(false);
+    toast('נשמרו ' + r.addedGroups + ' קבוצות חדשות ו-' + r.addedChildren + ' ילדים ✓', 'ok');
+    IMP = { files: [], groups: [] }; $('importPreview').classList.add('hidden');
+    loadAdmin().then(function(){ document.querySelector('#admTabs [data-tab=groups]').click(); });
+  }).catch(function(e){ busy(false); toast(e.message,'bad'); });
+}
+
+/* ================= דוח אקסל ================= */
+$('btnExport').onclick = function(){
+  if (!window.ExcelJS) { toast('רכיב האקסל לא נטען. רעננו את הדף.','bad'); return; }
+  busy(true, 'מכין דוח...');
+  api('adminExportData', S.pw).then(buildExcel).then(function(){ busy(false); }).catch(function(e){ busy(false); toast(e.message,'bad'); });
+};
+
+function buildExcel(d){
+  var wb = new ExcelJS.Workbook();
+  wb.creator = 'צהרוני פנאי העיר חדרה';
+  var NAVY = 'FF14306B', SKY = 'FFE8EFFB', OKF = 'FFE3F5EA', NOF = 'FFFBE7E5', GRAYF = 'FFF3F4F6';
+  var days = d.days, dl = days.map(function(x){ var l = dayLabel(x); return l.wd + ' ' + l.dm; });
+  var groupsById = {}; d.groups.forEach(function(g){ groupsById[g.id] = g; });
+  var att = {}; // childId -> date -> status
+  var reported = {}; // groupId -> date -> true
+  d.attendance.forEach(function(a){ (att[a.childId] || (att[a.childId] = {}))[a.date] = a.status; (reported[a.groupId] || (reported[a.groupId] = {}))[a.date] = true; });
+  var groups = d.groups.slice().sort(function(a,b){ return a.name.localeCompare(b.name,'he'); });
+  var kidsByGroup = {}; d.children.forEach(function(c){ (kidsByGroup[c.groupId] || (kidsByGroup[c.groupId] = [])).push(c); });
+  Object.keys(kidsByGroup).forEach(function(k){ kidsByGroup[k].sort(function(a,b){ return a.name.localeCompare(b.name,'he'); }); });
+
+  function sheet(name){ var ws = wb.addWorksheet(name, { views: [{ rightToLeft: true, state: 'frozen', ySplit: 3 }], pageSetup: { orientation: 'landscape', fitToPage: true, fitToWidth: 1, fitToHeight: 0, paperSize: 9 } }); return ws; }
+  function title(ws, text, ncols){
+    ws.mergeCells(1, 1, 1, ncols);
+    var c = ws.getCell(1,1); c.value = text; c.font = { bold: true, size: 15, color: { argb: NAVY } }; c.alignment = { horizontal: 'right' };
+    ws.getRow(1).height = 24;
+    ws.mergeCells(2, 1, 2, ncols);
+    var s = ws.getCell(2,1); s.value = 'הופק: ' + new Date().toLocaleString('he-IL'); s.font = { size: 10, color: { argb: 'FF6B7280' } };
+  }
+  function header(ws, row, values){
+    var r = ws.getRow(row); r.values = values; r.height = 22;
+    r.eachCell(function(c){ c.font = { bold: true, color: { argb: 'FFFFFFFF' } }; c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: NAVY } }; c.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true }; c.border = border(); });
+  }
+  function border(){ var s = { style: 'thin', color: { argb: 'FFD1D5DB' } }; return { top: s, left: s, bottom: s, right: s }; }
+  function styleBody(ws, fromRow, toRow, ncols){
+    for (var r = fromRow; r <= toRow; r++) for (var c = 1; c <= ncols; c++) { var cell = ws.getCell(r, c); cell.border = border(); if (!cell.alignment) cell.alignment = { horizontal: c <= 3 ? 'right' : 'center', vertical: 'middle' }; }
+  }
+  function mark(cell, st){
+    if (st === 'P') { cell.value = '✓'; cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: OKF } }; cell.font = { bold: true, color: { argb: 'FF1F8A4C' } }; }
+    else if (st === 'A') { cell.value = '✗'; cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: NOF } }; cell.font = { bold: true, color: { argb: 'FFC0392B' } }; }
+    else { cell.value = '—'; cell.font = { color: { argb: 'FF9CA3AF' } }; }
+    cell.alignment = { horizontal: 'center', vertical: 'middle' };
+  }
+
+  /* 1. סיכום לפי קבוצה */
+  var ws = sheet('סיכום');
+  var hdr = ['קבוצה', 'מובילה', 'רשומים'].concat(dl.map(function(x){ return 'נוכחים ' + x; })).concat(['ממוצע נוכחים ליום', 'אחוז נוכחות', 'ימים שדווחו']);
+  title(ws, d.campName + ' – סיכום נוכחות לפי קבוצה', hdr.length);
+  header(ws, 3, hdr);
+  var rowN = 4, totals = days.map(function(){ return 0; }), totalKids = 0;
+  groups.forEach(function(g){
+    var kids = kidsByGroup[g.id] || [], vals = [g.name, g.leader, kids.length], sumP = 0, sumMarked = 0, repDays = 0;
+    days.forEach(function(day, di){
+      if (!(reported[g.id] && reported[g.id][day])) { vals.push('לא דווח'); return; }
+      repDays++;
+      var p = 0, m = 0; kids.forEach(function(k){ var s = att[k.id] && att[k.id][day]; if (s === 'P') p++; if (s) m++; });
+      vals.push(p); sumP += p; sumMarked += m; totals[di] += p;
+    });
+    vals.push(repDays ? Math.round(sumP / repDays * 10) / 10 : '');
+    vals.push(sumMarked ? sumP / sumMarked : '');
+    vals.push(repDays + '/' + days.length);
+    ws.getRow(rowN).values = vals;
+    days.forEach(function(day, di){ var c = ws.getCell(rowN, 4 + di); if (c.value === 'לא דווח') { c.font = { color: { argb: 'FFC0392B' }, bold: true }; c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: NOF } }; } });
+    ws.getCell(rowN, hdr.length - 1).numFmt = '0%';
+    totalKids += kids.length; rowN++;
+  });
+  var tot = ['סה"כ', '', totalKids].concat(totals).concat(['', '', '']);
+  ws.getRow(rowN).values = tot;
+  ws.getRow(rowN).eachCell(function(c){ c.font = { bold: true }; c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: SKY } }; });
+  styleBody(ws, 4, rowN, hdr.length);
+  ws.columns.forEach(function(col, i){ col.width = i === 0 ? 26 : i === 1 ? 20 : 13; });
+  ws.autoFilter = { from: { row: 3, column: 1 }, to: { row: 3, column: hdr.length } };
+
+  /* 2. נוכחות מלאה */
+  var wf = sheet('נוכחות מלאה');
+  var hf = ['קבוצה', 'מובילה', 'שם הילד/ה'].concat(dl).concat(['ימי נוכחות', 'ימי היעדרות']);
+  title(wf, d.campName + ' – נוכחות מלאה', hf.length);
+  header(wf, 3, hf);
+  var r2 = 4;
+  groups.forEach(function(g){
+    (kidsByGroup[g.id] || []).forEach(function(k){
+      var p = 0, a = 0;
+      wf.getRow(r2).values = [g.name, g.leader, k.name];
+      days.forEach(function(day, di){ var s = att[k.id] && att[k.id][day]; if (s === 'P') p++; if (s === 'A') a++; mark(wf.getCell(r2, 4 + di), s); });
+      wf.getCell(r2, 4 + days.length).value = p; wf.getCell(r2, 5 + days.length).value = a;
+      r2++;
+    });
+  });
+  styleBody(wf, 4, r2 - 1, hf.length);
+  wf.columns.forEach(function(col, i){ col.width = i === 0 ? 24 : i === 1 ? 18 : i === 2 ? 24 : 12; });
+  wf.autoFilter = { from: { row: 3, column: 1 }, to: { row: 3, column: hf.length } };
+
+  /* 3. לא דיווחו */
+  var wm = sheet('לא דיווחו');
+  title(wm, 'קבוצות שלא דיווחו נוכחות', 3);
+  header(wm, 3, ['יום', 'קבוצה', 'מובילה']);
+  var r3 = 4;
+  days.forEach(function(day, di){ groups.forEach(function(g){ if (!(reported[g.id] && reported[g.id][day])) { wm.getRow(r3).values = [dl[di], g.name, g.leader]; r3++; } }); });
+  if (r3 === 4) { wm.getRow(4).values = ['כל הקבוצות דיווחו בכל הימים', '', '']; r3 = 5; }
+  styleBody(wm, 4, r3 - 1, 3);
+  wm.columns = [{ width: 18 }, { width: 28 }, { width: 22 }];
+
+  /* 4. לשונית לכל קבוצה */
+  var used = {};
+  groups.forEach(function(g){
+    var nm = g.name.replace(/[\[\]\*\?\/\\:]/g, ' ').trim().slice(0, 28) || 'קבוצה';
+    var base = nm, n = 2; while (used[nm]) { nm = base.slice(0, 25) + ' ' + n++; } used[nm] = true;
+    var wg = sheet(nm);
+    var hg = ['#', 'שם הילד/ה'].concat(dl).concat(['ימי נוכחות']);
+    title(wg, g.name + (g.leader ? ' – מובילה: ' + g.leader : ''), hg.length);
+    header(wg, 3, hg);
+    var kids = kidsByGroup[g.id] || [], r = 4;
+    kids.forEach(function(k, i){
+      var p = 0; wg.getRow(r).values = [i + 1, k.name];
+      days.forEach(function(day, di){ var s = att[k.id] && att[k.id][day]; if (s === 'P') p++; mark(wg.getCell(r, 3 + di), s); });
+      wg.getCell(r, 3 + days.length).value = p; r++;
+    });
+    var tr = ['', 'סה"כ נוכחים'];
+    days.forEach(function(day){ tr.push((reported[g.id] && reported[g.id][day]) ? kids.filter(function(k){ return att[k.id] && att[k.id][day] === 'P'; }).length : 'לא דווח'); });
+    tr.push('');
+    wg.getRow(r).values = tr; wg.getRow(r).eachCell(function(c){ c.font = { bold: true }; c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: GRAYF } }; });
+    styleBody(wg, 4, r, hg.length);
+    wg.columns.forEach(function(col, i){ col.width = i === 0 ? 5 : i === 1 ? 26 : 12; });
+  });
+
+  return wb.xlsx.writeBuffer().then(function(buf){
+    var blob = new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    var fname = 'דוח נוכחות - ' + d.campName.replace(/[\\\/:*?"<>|]/g, ' ') + '.xlsx';
+    if (window.__saveFile) return window.__saveFile(fname, blob);
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = fname;
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+    toast('הדוח הורד ✓', 'ok');
+  });
+}
+
+/* ================= הפעלה ================= */
+(function init(){
+  var pw = null; try { pw = sessionStorage.getItem('hk_pw'); } catch(e){}
+  if (pw) { S.pw = pw; S.mode = 'admin'; show('scrAdmin'); loadAdmin(); return; }
+  var code = store('hk_code');
+  if (code && /^\d{3}$/.test(code)) {
+    busy(true, 'נכנסת...');
+    api('leaderLogin', code).then(function(p){ busy(false); S.mode = 'leader'; S.code = code; openGroup(p); })
+      .catch(function(){ busy(false); store('hk_code', null); show('scrLogin'); });
+  } else { $('codeInput').focus(); }
+})();
+</script>
+</body>
+</html>
